@@ -4,10 +4,10 @@ from typing import Optional, List
 
 
 class CreateLead(SQLModel):
-    full_name: str = Field(max_length=100, nullable=False)
-    email: EmailStr = Field(max_length=100, nullable=False)
-    address: Optional[str] = Field(max_length=100, nullable=True)
-    phone: Optional[str] = Field(max_length=20, nullable=True)
+    full_name: str = Field(max_length=100)
+    email: EmailStr = Field(max_length=100)
+    address: Optional[str] = Field(max_length=100, nullable=True, default=None)
+    phone: Optional[str] = Field(max_length=20, nullable=True, default=None)
     degrees: List["CreateDegreeFromLead"] | None = None
 
 
@@ -20,7 +20,7 @@ class CreateDegreeFromLead(SQLModel):
 class CreateSubjectFromLead(BaseModel):
     id: Optional[int]  = None
     name: str = Field(max_length=100, nullable=False)
-    duration_in_months: Optional[int]  = None
+    duration_in_months: Optional[int] = Field(nullable=True, default=None, gt=0, lt=13)
     register_year: Optional[int]  = None
     times_taken: Optional[int]  = None
 

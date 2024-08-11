@@ -1,15 +1,15 @@
 from pydantic import EmailStr
 from sqlmodel import SQLModel, Field,  Relationship
 from typing import List, Optional
-from datetime import datetime
 from sqlalchemy import UniqueConstraint
 
 
+#Lead Models
 class LeadBase(SQLModel):
     full_name: str = Field(max_length=100, nullable=False)
     email: EmailStr = Field(max_length=100, nullable=False)
-    address: Optional[str] = Field(max_length=100, nullable=True)
-    phone: Optional[str] = Field(max_length=20, nullable=True)
+    address: Optional[str] = Field(max_length=100, nullable=True, default=None)
+    phone: Optional[str] = Field(max_length=20, nullable=True, default=None)
 
 class Lead(LeadBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -22,9 +22,11 @@ class LeadPublic(LeadBase):
     lead_degrees: List["LeadDegreePublic"] = []
 
 
+
+# Subject Models
 class BaseSubject(SQLModel):
     name: str = Field(max_length=100, nullable=False)
-    duration_in_months: Optional[int] = Field(default=None, nullable=True)
+    duration_in_months: Optional[int] = Field(nullable=True, default=None, gt=0, lt=13)
 
 class Subject(BaseSubject, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -41,6 +43,9 @@ class Subject(BaseSubject, table=True):
 class SubjectPublic(BaseSubject):
     id: int
 
+
+
+# Degree Models
 class DegreeBase(SQLModel):
     name: str = Field(max_length=100, nullable=False, unique=True)
 
@@ -53,6 +58,8 @@ class DegreePublic(DegreeBase):
     id: int
 
 
+
+# LeadDegree Models
 class LeadDegreeBase(SQLModel):
     lead_id: Optional[int]
     degree_id: Optional[int]
@@ -76,6 +83,8 @@ class LeadDegreePublic(LeadDegreeBase):
     lead_subjects: List["LeadSubjectPublic"] = []
 
 
+
+# LeadSubject Models
 class LeadSubjectBase(SQLModel):
     register_year: int = Field(nullable=False)
     times_taken: Optional[int] = Field(default=None, nullable=True)

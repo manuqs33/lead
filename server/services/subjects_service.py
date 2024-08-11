@@ -10,7 +10,7 @@ def check_or_create_subjects(session: Session, subjects: List[CreateSubjectFromL
     subject_names = [subject.name for subject in subjects]
 
     existing_subjects = session.exec(select(Subject).where(Subject.degree_id ==
-                                      degree_id, col(Subject.name).in_(subject_names))).all()
+                                                           degree_id, col(Subject.name).in_(subject_names))).all()
 
     existing_subject_names = [subject.name for subject in existing_subjects]
     new_subjects = [Subject(name=subject.name, duration_in_months=subject.duration_in_months, degree_id=degree_id)
@@ -20,7 +20,7 @@ def check_or_create_subjects(session: Session, subjects: List[CreateSubjectFromL
         session.commit()
         for subject in new_subjects:
             session.refresh(subject)
-            assert subject.id is not None 
+            assert subject.id is not None
 
     all_subjects = list(existing_subjects) + new_subjects
     return all_subjects

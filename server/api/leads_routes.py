@@ -7,9 +7,7 @@ from schemas import CreateLead, CreateLeadResponse
 from services import leads_service, degrees_service, subjects_service
 
 
-
 router = APIRouter()
-
 
 @router.post("/leads/", response_model=CreateLeadResponse)
 def create_lead(lead: CreateLead, session: Session = Depends(get_session)):

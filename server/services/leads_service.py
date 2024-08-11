@@ -1,5 +1,5 @@
 from fastapi import HTTPException
-from sqlmodel import Session, select
+from sqlmodel import Session
 from models import Lead
 from schemas import CreateLead, CreateLeadResponse
 

@@ -1,8 +1,7 @@
-from datetime import datetime
 from typing import List
 from sqlmodel import Session, select, col
-from models import Degree, LeadDegree #type: ignore
-from schemas import CreateDegreeFromLead #type: ignore
+from models import Degree, LeadDegree
+from schemas import CreateDegreeFromLead
 
 
 def check_or_create_degrees(session: Session, degrees: List[CreateDegreeFromLead]) -> List[Degree]:
