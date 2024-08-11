@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlmodel import Session, select
 from database import get_session
 from models import Degree, Lead, LeadDegree, LeadPublic
@@ -38,6 +38,10 @@ def get_lead_with_relations(lead_id: int, session: Session = Depends(get_session
 
 
 @router.get("/leads/", response_model=List[LeadPublic])
-def get_leads(session: Session = Depends(get_session)):
-    leads = session.exec(select(Lead)).all()
+def get_leads(
+    session: Session = Depends(get_session),
+    limit: int = Query(10, description="Number of leads to return"),
+    offset: int = Query(0, description="Number of leads to skip")
+):
+    leads = session.exec(select(Lead).offset(offset).limit(limit)).all()
     return leads
