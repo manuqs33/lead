@@ -1,5 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException, Request
-from sqlmodel import Session
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from models import Degree, Lead, LeadDegree, LeadSubject, Subject
 import database

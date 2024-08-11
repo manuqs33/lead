@@ -5,28 +5,30 @@ from datetime import datetime
 from sqlalchemy import UniqueConstraint
 
 
-class Lead(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
+class LeadBase(SQLModel):
     full_name: str = Field(max_length=100, nullable=False)
     email: EmailStr = Field(max_length=100, nullable=False)
     address: Optional[str] = Field(max_length=100, nullable=True)
     phone: Optional[str] = Field(max_length=20, nullable=True)
 
-    # Reverse one-to-many relationship
+class Lead(LeadBase, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
     lead_subjects: List["LeadSubject"] | None = Relationship(back_populates="lead")
     lead_degrees: List["LeadDegree"] | None = Relationship(back_populates="lead")
 
 
+class LeadPublic(LeadBase):
+    id: int
+    lead_degrees: List["LeadDegreePublic"] = []
 
 
-
-class Subject(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
+class BaseSubject(SQLModel):
     name: str = Field(max_length=100, nullable=False)
-    degree_id: int = Field(foreign_key="degree.id", nullable=False, index=True)
-    duration_in_months: Optional[int] = Field(default=None, nullable=False)
+    duration_in_months: Optional[int] = Field(default=None, nullable=True)
 
-    # Many-to-one relationship with Degree
+class Subject(BaseSubject, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    degree_id: Optional[int] = Field(foreign_key="degree.id", nullable=False, index=True)
     degree: "Degree" = Relationship(back_populates="subjects")
     lead_subjects: List["LeadSubject"] | None = Relationship(back_populates="subject")
 
@@ -36,22 +38,29 @@ class Subject(SQLModel, table=True):
                         name='uq_subject_name_degree_id'),
     )
 
+class SubjectPublic(BaseSubject):
+    id: int
 
-class Degree(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
+class DegreeBase(SQLModel):
     name: str = Field(max_length=100, nullable=False, unique=True)
 
-    # One-to-many relationship with Subject
+class Degree(DegreeBase, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
     subjects: List["Subject"] = Relationship(back_populates="degree")
-
-    # Reverse one-to-many relationship with LeadDegree
     lead_degrees: List["LeadDegree"] | None = Relationship(back_populates="degree")
 
+class DegreePublic(DegreeBase):
+    id: int
 
-class LeadDegree(SQLModel, table=True):
+
+class LeadDegreeBase(SQLModel):
+    lead_id: Optional[int]
+    degree_id: Optional[int]
+
+class LeadDegree(LeadDegreeBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    lead_id: int = Field(foreign_key="lead.id", nullable=False, index=True)
-    degree_id: int = Field(foreign_key="degree.id", nullable=False, index=True)
+    lead_id: Optional[int] = Field(foreign_key="lead.id", nullable=False, index=True)
+    degree_id: Optional[int] = Field(foreign_key="degree.id", nullable=False, index=True)
 
     lead: "Lead" = Relationship(back_populates="lead_degrees")
     degree: "Degree" = Relationship(back_populates="lead_degrees")
@@ -61,15 +70,24 @@ class LeadDegree(SQLModel, table=True):
         'lead_id', 'degree_id', name='uq_lead_degree'),)
 
 
+class LeadDegreePublic(LeadDegreeBase):
+    id: int
+    degree: "DegreePublic"
+    lead_subjects: List["LeadSubjectPublic"] = []
 
-class LeadSubject(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
+
+class LeadSubjectBase(SQLModel):
     register_year: int = Field(nullable=False)
     times_taken: Optional[int] = Field(default=None, nullable=True)
+    lead_id: Optional[int]
+    subject_id: Optional[int]
+    lead_degree_id: Optional[int]
 
-    lead_id: int = Field(foreign_key="lead.id", nullable=False, index=True)
-    subject_id: int = Field(foreign_key="subject.id", nullable=False, index=True)
-    lead_degree_id: int = Field(foreign_key="leaddegree.id", nullable=False, index=True)
+class LeadSubject(LeadSubjectBase, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    lead_id: Optional[int] = Field(foreign_key="lead.id", nullable=False, index=True)
+    subject_id: Optional[int] = Field(foreign_key="subject.id", nullable=False, index=True)
+    lead_degree_id: Optional[int] = Field(foreign_key="leaddegree.id", nullable=False, index=True)
 
     lead: "Lead" = Relationship(back_populates="lead_subjects")
     subject: "Subject" = Relationship(back_populates="lead_subjects")
@@ -77,3 +95,9 @@ class LeadSubject(SQLModel, table=True):
 
     __table_args__ = (UniqueConstraint(
         'lead_id', 'subject_id', name='uq_lead_subject'),)
+
+
+class LeadSubjectPublic(LeadSubjectBase):
+    id: int
+    subject: "SubjectPublic"
+

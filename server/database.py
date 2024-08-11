@@ -11,8 +11,6 @@ POSTGRES_DB = "postgres"
 POSTGRES_HOST = "database"
 POSTGRES_PORT = "5432"
 
-print(os.environ.get("DB_PASSWORD"))
-
 DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
 
 

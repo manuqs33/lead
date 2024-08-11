@@ -1,4 +1,4 @@
-from pydantic import EmailStr
+from pydantic import BaseModel, EmailStr
 from sqlmodel import SQLModel, Field
 from typing import Optional, List
 
@@ -17,7 +17,7 @@ class CreateDegreeFromLead(SQLModel):
     subjects: List["CreateSubjectFromLead"] | None = None
 
 
-class CreateSubjectFromLead(SQLModel):
+class CreateSubjectFromLead(BaseModel):
     id: Optional[int]  = None
     name: str = Field(max_length=100, nullable=False)
     duration_in_months: Optional[int]  = None
@@ -25,28 +25,5 @@ class CreateSubjectFromLead(SQLModel):
     times_taken: Optional[int]  = None
 
 
-
 class CreateLeadResponse(SQLModel):
-    id: int = Field()
-
-class GetLeadWithRelationsModel(SQLModel):
     id: int
-    full_name: str
-    email: EmailStr
-    address: Optional[str]  = None
-    phone: Optional[str]  = None
-    degrees: List["GetDegrees"] | None = None
-
-
-class GetDegrees(SQLModel):
-    id: int
-    name: str
-    subjects: List["GetSubjects"] | None = None
-
-
-class GetSubjects(SQLModel):
-    id: int
-    name: str
-    duration_in_months: Optional[int]
-    register_year: Optional[int]
-    times_taken: Optional[int]

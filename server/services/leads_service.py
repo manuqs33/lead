@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 from sqlmodel import Session, select
-from models import Lead, LeadDegree, LeadSubject
-from schemas import CreateLead, CreateLeadResponse, GetDegrees, GetLeadWithRelationsModel, GetSubjects
+from models import Lead
+from schemas import CreateLead, CreateLeadResponse
 
 
 def create_lead(lead: CreateLead, session: Session) -> CreateLeadResponse:
@@ -14,7 +14,7 @@ def create_lead(lead: CreateLead, session: Session) -> CreateLeadResponse:
 
 
 def get_lead_with_relations(lead_id: int, session: Session) -> Lead:
-    lead = session.exec(select(Lead).where(Lead.id == lead_id)).first()
+    lead = session.get(Lead, lead_id)
     if lead is None:
         raise HTTPException(status_code=404, detail="Lead not found")
     return lead
