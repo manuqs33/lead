@@ -21,8 +21,8 @@ class CreateSubjectFromLead(BaseModel):
     id: Optional[int]  = None
     name: str = Field(max_length=100, nullable=False)
     duration_in_months: Optional[int] = Field(nullable=True, default=None, gt=0, lt=13)
-    register_year: Optional[int]  = None
-    times_taken: Optional[int]  = None
+    register_year: int = Field(nullable=False, gt=1990, lt=2026)
+    times_taken: Optional[int]  = Field(nullable=True, default=None, gt=0, lt=10)
 
 
 class CreateLeadResponse(SQLModel):

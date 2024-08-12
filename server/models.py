@@ -86,7 +86,7 @@ class LeadDegreePublic(LeadDegreeBase):
 
 # LeadSubject Models
 class LeadSubjectBase(SQLModel):
-    register_year: int = Field(nullable=False)
+    register_year: int = Field(nullable=False, gt=1990, lt=2026)
     times_taken: Optional[int] = Field(default=None, nullable=True)
     lead_id: Optional[int]
     subject_id: Optional[int]
