@@ -1,6 +1,5 @@
 version: '3'
 services:
-  # Postgres database
   pgdb:
     image: postgres:16-alpine
     container_name: database
@@ -8,19 +7,18 @@ services:
       - pgdata:/var/lib/podtgresql/data
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
-  
+
   adminer:
     image: adminer
     restart: always
     ports:
       - 8080:8080
 
-  # Python server
   server:
     build:
       context: ./server/
       dockerfile: Dockerfile
-    container_name: backend
+    container_name: lead_server
     depends_on:
       - adminer
     ports:
@@ -29,17 +27,22 @@ services:
       - ./server:/code
     command: uvicorn main:app --host 0.0.0.0 --port 5000 --reload
 
-  # React client
-  #client:
-  #  build:
-  #    context: ./client/
-  #    dockerfile: Dockerfile
-  #  container_name: frontend
-  #  depends_on:
-  #    - adminer
-  #  ports:
-  #    - 3000:3000
+
+  client:
+    build:
+      context: ./client/
+    container_name: lead_client
+    depends_on:
+      - adminer
+    volumes:
+      - ./client:/code
+      - node_modules:/app/node_modules/
+    ports:
+      - 3000:3000
+    environment:
+      - NODE_ENV=development
 
 volumes:
   pgdata:
+  node_modules:
 
