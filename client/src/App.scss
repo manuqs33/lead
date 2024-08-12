@@ -1,0 +1,32 @@
+$primary: #320E3B;
+$success: #93496A;
+$info: #15616D;
+@import 'bootstrap/scss/bootstrap';
+
+
+#root {
+    margin: 0;
+    background-color: #f8f4f0;
+    min-height: 100vh;
+}
+
+html {
+    background-color: #f8f4f0;
+}
+
+.flex-between {
+    display: flex;
+    justify-content: space-between;
+}
+
+.custom-max-width {
+    max-width: 1120px !important;
+    margin: auto;
+}
+
+.submit-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
