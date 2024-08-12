@@ -35,9 +35,8 @@ to check in the Back End only methods. There is a get-by-id method where you can
 You can also log to  http://localhost:8080 to enter the adminer interface, which will allow you to check the status of the docker PostgreSQL database in your browser, and see how. You can log with the following credentials:
 
 
-|          |            |
-| -------- | ---------- |
 | System   | PostgreSQL |
+| -------- | ---------- |
 | Server   | database   |
 | Username | postgres   |
 | Password | example    |
