@@ -29,6 +29,8 @@ If not, you can use:
 docker-compose up
 ```
 
+That will create and run the containers. You can access the UI in http://localhost:3000
+
 After creating some leads from the UI, you can navigate to http://localhost:5000/docs
 to check in the Back End only methods. There is a get-by-id method where you can check your recently created lead, and a fetch-all method with pagination you can use to consult multiple leads. 
 
