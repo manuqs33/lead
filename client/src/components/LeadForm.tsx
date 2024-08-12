@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { DegreeForm } from "./DegreeForm";
-import { Lead, useFormContextLead } from "../hooks/FormHooks";
-/* import { PostLead } from "../api/LeadApi"; */
+import { Lead, useFormContextLead } from "../hooks/FormHelpers";
+import { PostLead } from "../api/LeadApi";
 
 
 export const LeadForm = () => {
@@ -10,29 +10,28 @@ export const LeadForm = () => {
         formState: { errors },
         handleSubmit,
     } = useFormContextLead()
+
     const [showModal, setShowModal] = useState(false);
     const [leadId, setLeadId] = useState(null);
 
     const handleClose = () => setShowModal(false);
-
     const onSubmit = async (data: Lead) => {
-        
         console.log(data);
         setLeadId(null);
-        /* const responseData = await PostLead(data);
+        const responseData = await PostLead(data);
         console.log(responseData);
 
         if (responseData) {
             setLeadId(responseData.id);
             setShowModal(true);
-        } */
+        }
     };
-    
+
     return (
         <div>
             <form onSubmit={handleSubmit(onSubmit)} className="container mt-4">
                 <div className="mb-3">
-                    <label htmlFor="full_name" className="form-label">Nombre completo</label>
+                    <label htmlFor="full_name" className="form-label">Nombre completo*</label>
                     <input
                         type="text"
                         id="full_name"
@@ -43,7 +42,7 @@ export const LeadForm = () => {
                 </div>
 
                 <div className="mb-3">
-                    <label htmlFor="email" className="form-label">Email</label>
+                    <label htmlFor="email" className="form-label">Email*</label>
                     <input
                         type="email"
                         id="email"
@@ -54,7 +53,7 @@ export const LeadForm = () => {
                 </div>
 
                 <div className="mb-3">
-                    <label htmlFor="address" className="form-label">Dirección</label>
+                    <label htmlFor="address" className="form-label">Dirección (Opcional)</label>
                     <input
                         type="text"
                         id="address"
@@ -65,7 +64,7 @@ export const LeadForm = () => {
                 </div>
 
                 <div className="mb-3">
-                    <label htmlFor="phone" className="form-label">Teléfono</label>
+                    <label htmlFor="phone" className="form-label">Teléfono (Opcional)</label>
                     <input
                         type="text"
                         id="phone"
@@ -89,7 +88,7 @@ export const LeadForm = () => {
                                 <h5 className="modal-title">Lead creado correctamente</h5>
                             </div>
                             <div className="modal-body">
-                                <p>el lead, sus carreras y materias se crearon con éxito con el Id: {leadId}</p>
+                                <p>El lead, sus carreras y materias se crearon con éxito. Puede consultar lo creado con el Id: {leadId}</p>
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-secondary" onClick={handleClose}>Close</button>

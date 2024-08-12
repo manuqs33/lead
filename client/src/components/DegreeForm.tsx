@@ -1,7 +1,7 @@
 import { useFieldArray } from "react-hook-form";
-import { useFormContextLead } from "../hooks/FormHooks";
 import { Fragment } from "react/jsx-runtime";
 import { SubjectForm } from "./SubjectForm";
+import { useFormContextLead } from "../hooks/FormHelpers";
 
 
 
@@ -35,7 +35,7 @@ export const DegreeForm = () => {
                                 Remover carrera
                             </button>
                         </div>
-                            <label htmlFor={`degrees.${degreeIndex}.name`} className="form-label">Degree Name</label>
+                            <label htmlFor={`degrees.${degreeIndex}.name`} className="form-label">Nombre de la carrera *</label>
                             <input
                                 type="text"
                                 id={`degrees.${degreeIndex}.name`}

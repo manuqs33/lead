@@ -1,6 +1,5 @@
 import { useFieldArray } from "react-hook-form";
-import { useFormContextLead } from "../hooks/FormHooks";
-
+import { useFormContextLead } from "../hooks/FormHelpers";
 
 
 export const SubjectForm = ({ degreeIndex }: { degreeIndex: number }) => {
@@ -76,7 +75,7 @@ export const SubjectForm = ({ degreeIndex }: { degreeIndex: number }) => {
             <button
                 type='button'
                 onClick={() => {
-                    append({ name: '', duration_in_months: undefined, register_year: undefined, times_taken: undefined });
+                    append({ name: '', duration_in_months: undefined, register_year: 2024, times_taken: undefined });
                 }}
                 className='btn btn-success'
             >

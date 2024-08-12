@@ -1,6 +1,7 @@
 $primary: #320E3B;
 $success: #93496A;
 $info: #15616D;
+$danger: #963D5A;
 @import 'bootstrap/scss/bootstrap';
 
 
@@ -26,7 +27,11 @@ html {
 
 .submit-container {
     display: flex;
-    justify-content: center;
+    justify-content: end;
     align-items: center;
     margin-top: 20px;
+}
+
+.custom-pl{
+    padding-left: calc(var(--bs-gutter-x) * 0.5);
 }

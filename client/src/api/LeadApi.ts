@@ -1,4 +1,4 @@
-import { Lead } from "../hooks/FormHooks";
+import { Lead } from "../hooks/FormHelpers";
 
 
 export const PostLead = async (lead: Lead) => {
@@ -18,13 +18,4 @@ export const PostLead = async (lead: Lead) => {
     } catch (error) {
         console.error(error);
     }
-}
-
-export const GetLeads = async () => {
-    const response = await fetch('http://localhost:5000/api/leads');
-    if (!response.ok) {
-        throw new Error('Failed to get leads');
-    }
-    const data = await response.json();
-    return data;
 }
