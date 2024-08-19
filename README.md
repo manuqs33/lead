@@ -10,12 +10,16 @@ After posting a lead, the id will return to the user in the UI and, afterwards, 
 
 ## Technical aspects
 
-The app is built with FastAPI in the backend and a Postgres database. In the ORM layer it uses SQLModel, a layer of compatibility over  Pydantic and SQLAlchemy recently built by the creator of FastAPI. Although the experiment was very interesting, since it's in a relatively early stage of development, sticking to the traditional use of Pydantic + SQLAlchemy may be advisable for larger projects aimed for production. All the environment is also configured to use MyPy for static type checking, trying to emulate best practices in that field. In Database terms, a strategy of generating different tables for subjects, degrees and leads was chosen, as well as intermediate tables to connect lead with subjects and degrees, aiming for an organization that could potentially scale, even if this is just a small exercise. 
+The app is built with FastAPI in the backend and a Postgres database, with Pydantic and SQlAlchemy. All the environment is also configured to use MyPy for static type checking, trying to emulate best practices in that field. In Database terms, a strategy of generating different tables for subjects, degrees and leads was chosen, as well as intermediate tables to connect lead with subjects and degrees, aiming for an organization that could potentially scale, even if this is just a small exercise. 
 
 The Front End was built with Vite, the Rust-based SWC compiler, and React. It also uses Typescript to leverage the Zod data validation library, which integrates well with React Hook Form. These type validations work really well and, when used thoughtfully, improve the developer's experience and diminish the chances of major errors. 
 
 The database, the Back End and the Front End are organized to launch as Docker containers, with Docker-compose. It's important to notice that the repos configuration is aimed at a develop environment, serving to "early-test" the functioning of the app in a container environment, with hot reload. In production, the setup should be a bit different, mostly in the Front End, which should be built as static files and accessed through a web server (like Nginx) pointing to its index.html file. Also, a proper security configuration and CORS policy should be set before deploying.
 ## How to run
+
+> [!WARNING]
+> If you have images or volumes from the previous version, run `make down`and then `make build`, or the equivalent commands listed in the Makefile to make sure a previous version doesn't interfere with the database creation.
+
 
 To run the project you need a PC with Docker installed. If Makefiles work in your environment (as they do by default on WSL, MacOS and Linux), you can simply use
 
@@ -43,3 +47,17 @@ You can also log to  http://localhost:8080 to enter the adminer interface, which
 | Username | postgres   |
 | Password | example    |
 | Database | postgres   |
+
+## Testing 
+
+Create a virtual environment and run:
+
+```shell
+pip install -r requirements.txt
+```
+
+And then run:
+
+```bash
+pytest
+```
