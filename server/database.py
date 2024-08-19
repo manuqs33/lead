@@ -1,7 +1,10 @@
 
-from sqlmodel import SQLModel, create_engine, Field, Session
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
 import os
+from models.base import Base
 
 load_dotenv()
 
@@ -13,14 +16,17 @@ POSTGRES_PORT = "5432"
 
 DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
 
-
 engine = create_engine(DATABASE_URL)
 
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+
 def create_metadata():
-    SQLModel.metadata.create_all(engine)
+    Base.metadata.create_all(bind=engine)
+
 
 def get_session():
-    session = Session(engine)
+    session = SessionLocal()
     try:
         yield session
     finally:

@@ -1,48 +1,29 @@
-
-
 from typing import List
-from sqlmodel import Session, select, col
+from dtos import CreateSubjectFromLeadDto
 from models import LeadSubject, Subject
-from schemas import CreateSubjectFromLead
+from daos import SubjectDao, LeadSubjectDao
+from sqlalchemy.orm import Session
 
 
-def check_or_create_subjects(session: Session, subjects: List[CreateSubjectFromLead], degree_id: int) -> List[Subject]:
-    subject_names = [subject.name for subject in subjects]
+class SubjectsService:
+    def __init__(self):
+        self.subject_dao = SubjectDao()
+        self.lead_subject_dao = LeadSubjectDao()
 
-    existing_subjects = session.exec(select(Subject).where(Subject.degree_id ==
-                                                           degree_id, col(Subject.name).in_(subject_names))).all()
-
-    existing_subject_names = [subject.name for subject in existing_subjects]
-    new_subjects = [Subject(name=subject.name, duration_in_months=subject.duration_in_months, degree_id=degree_id)
-                    for subject in subjects if subject.name not in existing_subject_names]
-    if new_subjects:
-        session.add_all(new_subjects)
-        session.commit()
-        for subject in new_subjects:
-            session.refresh(subject)
-            assert subject.id is not None
-
-    all_subjects = list(existing_subjects) + new_subjects
-    return all_subjects
-
-
-def assign_lead_to_subjects(session: Session, lead_id: int, lead_degree_id: int, subjects: List[Subject], metadata: List[CreateSubjectFromLead]) -> List[LeadSubject]:
-    response: List[LeadSubject] = []
-    metadata_dict = {item.name: item for item in metadata}
-    new_lead_subjects = [
-        LeadSubject(
-            lead_degree_id=lead_degree_id,
-            lead_id=lead_id,
-            subject_id=subject.id,
-            times_taken=metadata_dict[subject.name].times_taken,
-            register_year=metadata_dict[subject.name].register_year
-        ) for subject in subjects
-    ]
-    if new_lead_subjects:
-        session.add_all(new_lead_subjects)
-        session.commit()
-        for new_lead_subject in new_lead_subjects:
-            session.refresh(new_lead_subject)
-
-    response.extend(new_lead_subjects)
-    return response
+    def check_or_create_subjects(self, subjects: List[CreateSubjectFromLeadDto], degree_id: int, session: Session) -> List[Subject]:
+        subject_names = [subject.name for subject in subjects]
+        existing_subjects = self.subject_dao.find_existing_subjects(
+            subject_names, degree_id, session)
+        existing_subject_names = [
+            subject.name for subject in existing_subjects]
+        non_existing_subjects = [
+            subject for subject in subjects if subject.name not in existing_subject_names]
+        new_subjects = self.subject_dao.create_subjects(
+            non_existing_subjects, degree_id, session)
+        return existing_subjects + new_subjects
+    
+    def assign_lead_to_subjects(self, lead_id: int, lead_degree_id: int, subjects: List[Subject], metadata: List[CreateSubjectFromLeadDto], session: Session) -> List[LeadSubject]:
+        metadata_dict = {item.name: item for item in metadata}
+        new_lead_subjects = self.lead_subject_dao.create_lead_subjects(
+            lead_id, lead_degree_id, subjects, metadata_dict, session)
+        return new_lead_subjects
