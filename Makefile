@@ -6,3 +6,6 @@ build:
 
 rebuild:
 	docker-compose up --build --no-cache
+
+down:
+	docker-compose down --rmi all --volumes
