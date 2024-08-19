@@ -40,7 +40,7 @@ const PostSubjectSchema = z.object({
     .min(1, {
         message: "El número de veces que se cursó la materia debe ser al menos 1",
     }).max(10, {
-        message: "Times taken must be max 10",
+        message: "El número de veces que se cursó la materia debe ser como máximo 10",
     }).optional().or(z.literal('')).transform(value => value === '' ? undefined : value),
 });
 
